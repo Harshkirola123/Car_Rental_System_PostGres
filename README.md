@@ -22,7 +22,7 @@ This system can be used for:
 
 - **Backend**: Node.js, Express.js
 - **Language**: TypeScript
-- **Database**: MongoDB (using Mongoose ORM)
+- **Database**: PostgreSQL (using TypeORM)
 - **Authentication**: JWT (JSON Web Tokens)
 - **Payment Integration**: Dummy payment gateway for testing
 - **Other Libraries**: Mongoose, Passport.js (authentication), Axios (API requests)
@@ -36,7 +36,7 @@ Follow these steps to set up the project locally:
 Ensure you have the following installed on your machine:
 
 - Node.js (v14 or above)
-- MongoDB (local or using MongoDB Atlas)
+- PostgreSQL (local or Hosted)
 
 ### Installation Steps
 
@@ -57,17 +57,21 @@ Ensure you have the following installed on your machine:
    Since we're using TypeScript, ensure you have the required TypeScript dependencies:
 
    ```bash
-   npm install --save-dev typescript @types/node @types/express @types/mongoose
+   npm install --save-dev typescript @types/node @types/express
    ```
 
 3. **Setup environment variables**:
    Create a `.env` file in the root directory and define the following variables:
 
    ```
-   MONGO_URI=<your-mongo-db-uri>
+   POSTGRES_HOST=<your-postgres-host>
+   POSTGRES_PORT=<your-postgres-port>
+   POSTGRES_USER=<your-postgres-username>
+   POSTGRES_PASSWORD=<your-postgres-password>
+   POSTGRES_DB=<your-database-name>
    JWT_SECURITY_REFRESH=<your-jwt-secret-refresh>
-   JWT_SECURITY_ACCESS = <your-jwt-secret-access>
-   PORT = <your-port-number>
+   JWT_SECURITY_ACCESS=<your-jwt-secret-access>
+   PORT=<your-port-number>
    PAYMENT_GATEWAY_API_KEY=<your-dummy-payment-api-key>
    ```
 
@@ -101,12 +105,62 @@ Ensure you have the following installed on your machine:
 
    The app will automatically reload when you make changes to TypeScript files.
 
+## Migrations in TypeORM
+
+TypeORM supports database migrations, which allow you to manage changes to the database schema over time. Below are the steps to generate and run migrations:
+
+### Generate a Migration
+
+To create a new migration file based on changes in your entities, use the following command:
+
+```bash
+npx typeorm migration:generate -o <MigrationName> -d <data-source>
+```
+
+This command will create a new file in the `src/migration` folder with the specified `<MigrationName>`.
+
+### Run Migrations
+
+To apply all pending migrations to the database, use:
+
+```bash
+npx typeorm migration:run -d <data-source>
+```
+
+This will execute the migration files and update the database schema accordingly.
+
+### Revert Migrations
+
+If you need to undo the last migration, use:
+
+```bash
+npx typeorm migration:revert -d <data-source>
+```
+
+This will revert the changes made by the most recent migration.
+
+### Example Workflow
+
+1. Modify or add new entities in the `src/entity` folder.
+2. Generate a migration based on the changes:
+
+   ```bash
+   npx typeorm migration:generate -n AddNewFeature
+   ```
+
+3. Run the migration to apply changes to the database:
+
+   ```bash
+   npx typeorm migration:run
+   ```
+
+4. Test the changes in your application.
+
 ## Project Structure
 
 Here’s a high-level overview of the project structure:
 
 ![Screenshot 2025-01-21 at 15 47 35](https://github.com/user-attachments/assets/27b40167-6cc6-4c1e-9aff-b5aaf336b413)
-
 
 ## Example API Endpoints
 
